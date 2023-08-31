@@ -8,19 +8,35 @@ import com.company.splendor.player.BasicPlayer;
 import com.company.splendor.player.realplayer.Ai;
 import com.company.splendor.player.realplayer.Gamer;
 
+import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
 	    // write your code here
         Scanner scanner = new Scanner(System.in);
-        int player_num;
+        int player_num=0;
 
         while(true){
-            System.out.println("请输入游戏人数(2-4人):");
-            for(player_num = scanner.nextInt(); player_num <2|| player_num >4; player_num =scanner.nextInt()) System.out.println("错误的游戏人数！请重新输入游戏人数(2-4人):");
+            while(player_num == 0){
+                try{
+                    System.out.println("请输入游戏人数(2-4人),退出请关掉:");
+                    player_num =scanner.nextInt();
+                    if(player_num <2|| player_num >4){
+                        System.out.println("错误的游戏人数！请重新输入游戏人数(2-4人):");
+                        player_num=0;
+                    }
+                }catch (InputMismatchException e){
+                    System.out.println("请输入数字！");
+                    player_num=-1;
+                }finally {
+                    if(scanner.hasNextLine()) scanner.nextLine();
+                }
+            }
+
             //要先准备机器人和玩家
             ActionSequence.setSequence(player_num);
             //设置宝石
@@ -47,13 +63,9 @@ public class Main {
                 }
             }
             //退出程序
-            try {
-                if(scanner.nextInt()==0) break;
-            }catch (IllegalArgumentException ignored){
-            }
-            finally {
-                if(scanner.hasNextLine()) scanner.hasNextLine();
-            }
+            System.out.println("任意键退出！");
+            System.in.read();
+            break;
         }
     }
 }

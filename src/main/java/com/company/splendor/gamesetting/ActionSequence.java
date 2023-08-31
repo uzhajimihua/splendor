@@ -84,7 +84,20 @@ public class ActionSequence {
         int difficulty = 0,pos=0;
         Crystal crystal=null;
         int[] nums = new int[5];
-        switch (scanner.nextInt()){
+        int action = -1;
+        while(action==-1){
+            try{
+                action = scanner.nextInt();
+            }catch (InputMismatchException e){
+                System.out.println("错误的输入，请输入数字:");
+                action = -1;
+            }finally {
+                if(scanner.hasNextLine()) scanner.nextLine();
+            }
+
+        }
+
+        switch (action){
             case 0:System.out.println("拜拜！");return true;
             case 1: System.out.println("您想买的发展卡是(难度序号,顺序序号)：");
                     while(difficulty==0||pos==0){
