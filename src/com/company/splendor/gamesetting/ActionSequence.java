@@ -125,7 +125,6 @@ public class ActionSequence {
                         }
                     }
                     gamer.borrow(difficulty,pos);
-                    CrystalShop.getCrystalShop().lent();
                     break;
             case 3: System.out.println("您想赎回的发展卡是(难度序号,顺序序号)：");
                     while(pos==0){

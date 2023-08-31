@@ -32,6 +32,6 @@ public abstract class BasicCrystal implements BasicCrystalActions {
     }
     public void returnCrystal(int number){num+=number;}
     public String showStatus(){
-        return new Formatter(new StringBuilder()).format("%s remains%2d, ",crystalColor,num).toString();
+        return new Formatter(new StringBuilder()).format("%s 剩余%2d个, ",crystalColor,num).toString();
     }
 }

@@ -80,9 +80,7 @@ public class CrystalShop {
     public boolean canLent(){
         return gold_num>0;
     }
-    public void lent(){
-        gold_num--;
-    }
+    public void lent(){ gold_num--; }
     public void back(){
         gold_num++;
     }
