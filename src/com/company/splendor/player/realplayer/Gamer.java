@@ -1,13 +1,9 @@
 package com.company.splendor.player.realplayer;
 
 import com.company.splendor.card.cards.Card;
-import com.company.splendor.crystal.Gold;
+import com.company.splendor.crystal.crystals.Gold;
 import com.company.splendor.player.BasicPlayer;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class Gamer extends BasicPlayer {
     public Gamer(String playerName){
         super(playerName);

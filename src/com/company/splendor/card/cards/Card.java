@@ -2,13 +2,9 @@ package com.company.splendor.card.cards;
 
 import com.company.splendor.card.BasicCard;
 import com.company.splendor.other.Crystal;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class Card extends BasicCard {
     public Card(int difficulty, int points, Crystal reward, Map<Crystal, Integer> solution){
         super(difficulty,points,reward,solution);

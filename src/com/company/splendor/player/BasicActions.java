@@ -2,7 +2,7 @@ package com.company.splendor.player;
 
 import com.company.splendor.card.Noble;
 import com.company.splendor.card.cards.Card;
-import com.company.splendor.crystal.Gold;
+import com.company.splendor.crystal.crystals.Gold;
 
 public interface BasicActions {
     void showStatus();

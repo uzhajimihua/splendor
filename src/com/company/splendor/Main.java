@@ -16,32 +16,43 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 	    // write your code here
         Scanner scanner = new Scanner(System.in);
-        System.out.println("请输入游戏人数(2-4人):");
-        int players;
-        for(players= scanner.nextInt();players<2||players>4;players=scanner.nextInt()) System.out.println("错误的游戏人数！请重新输入游戏人数(2-4人):");
-        //设置宝石
-        CrystalShop.init(players);
-        //准备机器人和玩家
-        ActionSequence.initPlayers(players);
-        //抽卡
-        DrawCards.showCards();
-        //抽取贵族
-        PresentNobles.initNobles(players);
+        int player_num;
 
         while(true){
-            BasicPlayer player = ActionSequence.getCurrentPlayer();
-            if(player instanceof Ai){
-                ActionSequence.aiAction((Ai)player);
-            } else if (player instanceof Gamer){
-                if(ActionSequence.gamerAction((Gamer) player, scanner)){
-                    System.out.println("玩家退出，游戏结束！");
+            System.out.println("请输入游戏人数(2-4人):");
+            for(player_num = scanner.nextInt(); player_num <2|| player_num >4; player_num =scanner.nextInt()) System.out.println("错误的游戏人数！请重新输入游戏人数(2-4人):");
+            //要先准备机器人和玩家
+            ActionSequence.setSequence(player_num);
+            //设置宝石
+            CrystalShop.init();
+            //抽卡
+            DrawCards.showCards();
+            //抽取贵族
+            PresentNobles.initNobles(player_num);
+
+            while(true){
+                BasicPlayer player = ActionSequence.getSequence().getCurrentPlayer();
+                if(player instanceof Ai){
+                    ActionSequence.getSequence().aiAction((Ai)player);
+                } else if (player instanceof Gamer){
+                    if(ActionSequence.getSequence().gamerAction((Gamer) player, scanner)){
+                        System.out.println("玩家退出，游戏结束！输入0结束程序，输入其他开始新的一局游戏！");
+                        break;
+                    }
+                }
+                player.canInviteNobles(PresentNobles.getNobles());
+                if(player.isWinner()) {
+                    System.out.println("游戏结束！"+player.getPlayerName()+"获得胜利！输入0结束程序，输入其他开始新的一局游戏！");
                     break;
                 }
             }
-            player.canInviteNobles(PresentNobles.getNobles());
-            if(player.isWinner()) {
-                System.out.println("游戏结束！"+player.getPlayerName()+"获得胜利！");
-                break;
+            //退出程序
+            try {
+                if(scanner.nextInt()==0) break;
+            }catch (IllegalArgumentException ignored){
+            }
+            finally {
+                if(scanner.hasNextLine()) scanner.hasNextLine();
             }
         }
     }

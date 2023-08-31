@@ -10,29 +10,27 @@ import java.util.Map;
 @Data
 public class PresentNobles {
     static private Noble[] nobles;
-    static private boolean isInit = false;
 
     static public void initNobles(int player_num){
-        if(isInit) return;
         nobles = GenerateNobles.generate(player_num+1);
-        System.out.println("Nobles coming here:");
+        System.out.println("前来观看的贵族有:");
         for(Noble noble:nobles)
             System.out.println(showNoble(noble));
-        isInit = true;
     }
 
     static public Noble[] getNobles(){
         return nobles;
     }
+
     static public void showNobles(){
-        System.out.println("Nobles remaining here:");
+        System.out.println("仍然在观望的贵族有:");
         for(Noble noble:nobles){
-            if(noble.getOwner()!=null) System.out.println(showNoble(noble));
+            if(noble.getOwner()==null) System.out.println(showNoble(noble));
         }
     }
     static private StringBuilder showNoble(Noble noble){
         StringBuilder sb = new StringBuilder();
-        sb.append(noble.getName()).append(" interests in:\n");
+        sb.append(noble.getName()).append("希望您有:\n");
         for(Map.Entry<Crystal,Integer> e:noble.getMap().entrySet())
             sb.append(e.getKey()).append(":").append(e.getValue()).append(",");
         return sb.delete(sb.length()-1,sb.length());

@@ -2,17 +2,15 @@ package com.company.splendor.crystal.crystals;
 
 import com.company.splendor.crystal.BasicCrystal;
 import com.company.splendor.other.Crystal;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 public class GreenCrystal extends BasicCrystal {
     public GreenCrystal(){
         super();
     }
 
-    public static void init(int crystal_nums) {
-        init(crystal_nums,Crystal.Green);
+    public GreenCrystal(int crystal_nums) {
+        super(crystal_nums,Crystal.Green);
     }
 }

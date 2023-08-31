@@ -2,7 +2,7 @@ package com.company.splendor.player;
 
 import com.company.splendor.card.Noble;
 import com.company.splendor.card.cards.Card;
-import com.company.splendor.crystal.Gold;
+import com.company.splendor.crystal.crystals.Gold;
 import com.company.splendor.gamesetting.CrystalShop;
 import com.company.splendor.gamesetting.DrawCards;
 import com.company.splendor.other.Crystal;
@@ -21,14 +21,6 @@ public abstract class BasicPlayer implements BasicActions{
     protected List<Noble> visitedNobles;
     protected String playerName;
 
-    private BasicPlayer(){
-        crystals = new int[5];
-        discounts = new int[5];
-        golds = new ArrayList<>(3);
-        points = 0;
-        visitedNobles = new ArrayList<>(5);
-        this.playerName = "";
-    }
     protected BasicPlayer(String playerName){
         crystals = new int[5];
         discounts = new int[5];
@@ -56,9 +48,12 @@ public abstract class BasicPlayer implements BasicActions{
                 sb.append(showCard(g.getCard()));
             }
         }
-        sb.append(playerName).append("拥有 ").append(points).append(" 分\n");
+        sb.append(playerName).append(" 拥有 ").append(points).append(" 分！\n");
         System.out.println(sb);
     }
+
+    //一回合只能邀请一位贵族
+    //todo gamer 选择希望邀请的贵族
     @Override
     public void canInviteNobles(Noble[] nobles){
         for(Noble n:nobles){
@@ -66,13 +61,13 @@ public abstract class BasicPlayer implements BasicActions{
                 visitedNobles.add(n);
                 n.setOwner(playerName);
                 points+=3;
-                System.out.println(n.getName()+" is invited by "+playerName+"!");
+                System.out.println(n.getName()+" 被 "+playerName+" 邀请前去做客!"+playerName+"获得了 3 分！");
                 break;
             }
         }
     }
 
-    public int crystalCheck(){
+    public int crystalCheck() throws InterruptedException {
         int sum = 0;
         for(int i:crystals){
             sum+=i;
@@ -97,9 +92,7 @@ public abstract class BasicPlayer implements BasicActions{
     }
 
     public boolean canBuyACard(int difficulty,int pos){
-        //越界处理
-        if(difficulty>3||difficulty<1||pos>4||pos<1) return false;
-        return canBuyACard(DrawCards.chooseACard(difficulty,pos-1,false));
+        return canBuyACard(DrawCards.chooseACard(difficulty,pos,false));
     }
 
     @Override
@@ -116,11 +109,12 @@ public abstract class BasicPlayer implements BasicActions{
 
     @Override
     public void borrow(int difficulty, int pos){
-        Card card = DrawCards.chooseACard(difficulty,pos-1,true);
+        Card card = DrawCards.chooseACard(difficulty,pos,true);
         Gold gold = new Gold(card);
         golds.add(gold);
-        CrystalShop.lent();
+        CrystalShop.getCrystalShop().lent();
     }
+
     @Override
     public Gold repay(int pos){
         Gold gold = golds.remove(pos);

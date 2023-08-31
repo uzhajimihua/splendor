@@ -1,4 +1,4 @@
-package com.company.splendor.crystal;
+package com.company.splendor.crystal.crystals;
 
 import com.company.splendor.card.cards.Card;
 import com.company.splendor.other.Crystal;

@@ -6,6 +6,7 @@ import com.company.splendor.other.Crystal;
 import com.company.splendor.player.BasicPlayer;
 import lombok.Data;
 
+import java.util.Formatter;
 import java.util.Map;
 import java.util.Random;
 
@@ -45,39 +46,54 @@ public class DrawCards {
         }
     }
 
+    //不处理pos
     static private void setACard(Card[] difficulty,int pos,Card[] cards,int diff){
-        int i;
         if(nums[diff]<=0){
             System.out.println("difficulty "+diff+" has no more new cards!");
+            difficulty[pos]=null;
             return;
         }
-        for(i=random.nextInt(cards.length);cards[i]==null;i=random.nextInt(cards.length));
-        difficulty[pos]=cards[i];
-        cards[i]=null;
-        nums[diff]--;
+        for(int i=random.nextInt(cards.length);;i=random.nextInt(cards.length)){
+            if(cards[i]!=null){
+                difficulty[pos]=cards[i];
+                cards[i]=null;
+                nums[diff]--;
+                break;
+            }
+        }
     }
 
-    //difficulty 123 pos012
+    //difficulty 123 pos123 调用者正常输入 函数自己检查数值
+    //takeaway 为 true 时，会翻开一张新的卡片
     static public Card chooseACard(int diff,int pos,boolean takeaway){
         Card card = null;
+        if(pos>4||pos<1) return null;
         switch (diff){
-            case 3: card = difficulty3[pos];if(takeaway) setACard(difficulty3,pos,cards3,diff);break;
-            case 2: card = difficulty2[pos];if(takeaway) setACard(difficulty2,pos,cards2,diff);break;
-            case 1: card = difficulty1[pos];if(takeaway) setACard(difficulty1,pos,cards1,diff);break;
+            case 3: card = difficulty3[pos-1];if(takeaway) setACard(difficulty3,pos-1,cards3,diff);break;
+            case 2: card = difficulty2[pos-1];if(takeaway) setACard(difficulty2,pos-1,cards2,diff);break;
+            case 1: card = difficulty1[pos-1];if(takeaway) setACard(difficulty1,pos-1,cards1,diff);break;
             default:
         }
-        return  card;
+        return card;
     }
+
     //生成发展卡数组情况字符串
     static private StringBuilder showCard(Card[] difficulty){
+        //最长为31
         StringBuilder sb = new StringBuilder();
+        Formatter fm = new Formatter(sb);
         for(Card card:difficulty){
-            sb.append(card.getReward()).append("\t").append(card.getPoints()).append("\n");
-            sb.append("requires:");
-            for(Map.Entry<Crystal,Integer> e:card.getSolution().entrySet())
-                sb.append(e.getKey()).append(":").append(e.getValue()).append(",");
-            sb.delete(sb.length()-1,sb.length()).append("\n");
+            fm.format("%-6s%-27d", card.getReward(),card.getPoints());
         }
+        fm.format("%n");
+        int len = sb.length()+33;
+        for(int i=0;i<4;i++){
+            for(Map.Entry<Crystal,Integer> e:difficulty[i].getSolution().entrySet())
+                fm.format("%-5s:%d,",e.getKey(),e.getValue());
+            sb.deleteCharAt(sb.length()-1);
+            while(sb.length()<len+i*33) sb.append(' ');
+        }
+        fm.format("%n");
         return sb;
     }
     //显示翻开的发展卡情况
