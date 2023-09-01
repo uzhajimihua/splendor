@@ -80,19 +80,18 @@ public abstract class BasicPlayer implements BasicActions{
         return points>=15;
     }
 
+    public boolean canBuyACard(int difficulty,int pos){
+        return canBuyACard(DrawCards.chooseACard(difficulty,pos,false));
+    }
     @Override
     public boolean canBuyACard(Card card){
         if(card == null) return false;
         for(Map.Entry<Crystal,Integer> e:card.getSolution().entrySet()){
             if(discounts[e.getKey().ordinal()]-e.getValue()<0)
-                if(crystals[e.getKey().ordinal()]+(discounts[e.getKey().ordinal()]-e.getValue())<0)
+                if(crystals[e.getKey().ordinal()]+discounts[e.getKey().ordinal()]-e.getValue()<0)
                     return false;
         }
         return true;
-    }
-
-    public boolean canBuyACard(int difficulty,int pos){
-        return canBuyACard(DrawCards.chooseACard(difficulty,pos,false));
     }
 
     @Override
@@ -115,8 +114,8 @@ public abstract class BasicPlayer implements BasicActions{
         CrystalShop.getCrystalShop().lent();
     }
 
+    //函数内部处理pos
     @Override
-    //函数内部处理
     public Gold repay(int pos){
         Gold gold = golds.remove(pos-1);
         points+=gold.getCard().getPoints();
@@ -127,7 +126,7 @@ public abstract class BasicPlayer implements BasicActions{
     private StringBuilder showCard(Card card){
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%-8s%d%n",card.getReward(),card.getPoints()));
-        sb.append("requires:");
+        sb.append("偿还需要:");
         for(Map.Entry<Crystal,Integer> e:card.getSolution().entrySet())
             sb.append(e.getKey()).append(":").append(e.getValue()).append(",");
         sb.delete(sb.length()-1,sb.length()).append("\n");

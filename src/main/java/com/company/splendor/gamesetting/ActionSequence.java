@@ -61,9 +61,12 @@ public class ActionSequence {
         String availableActions = preCheck(ai).toString();
         //随机权重
         List<Integer> actions = new ArrayList<>();
+        System.out.println(ai.getPlayerName()+availableActions);
         for(int i=1;i<6;i++) if(availableActions.indexOf(i+'0')!=-1) actions.add(i);
-        //平均概率被选中
-        switch (actions.get(random.nextInt(actions.size()))){
+        // 如果可以购买或换贷款应优先购买和还贷款
+        int action  = random.nextInt(actions.size());
+        if(actions.contains(1)||actions.contains(3)) action = random.nextInt(2)==1?1:3;
+        switch (actions.get(action)){
             case 1:ai.BuyACard();break;
             case 2:ai.borrow();break;
             case 3:ai.repay();break;
@@ -233,7 +236,7 @@ public class ActionSequence {
 
     private StringBuilder preCheck(BasicPlayer player){
         StringBuilder sb = new StringBuilder("您想要:0 退出游戏,");
-        if(DrawCards.canChoose(player)) sb.append("1 购买发展卡");
+        if(DrawCards.canChoose(player)) sb.append("1 购买发展卡,");
         if(CrystalShop.getCrystalShop().canLent()&&player.getGolds().size()<3) sb.append("2 贷款发展卡,");
         if(CrystalShop.getCrystalShop().canRepay(player)) sb.append("3 还款发展卡,");
         if(CrystalShop.getCrystalShop().canGetThree()) sb.append("4 拿三种宝石,");

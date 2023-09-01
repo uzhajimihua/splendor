@@ -20,11 +20,11 @@ public class Ai extends BasicPlayer {
         List<Integer> canBuyList = new ArrayList<>(12);
         for(int i=1;i<5;i++){
             for(int j=1;j<4;j++){
-                if(super.canBuyACard(j,i)) canBuyList.add((j-1)*4+i-1);
+                if(super.canBuyACard(j,i)) canBuyList.add(j*4+i);
             }
         }
         int target = canBuyList.get(random.nextInt(canBuyList.size()));
-        Card card = super.buyACard(target/4+1,target%4);
+        Card card = target%4==0?super.buyACard(target/4-1,4):super.buyACard(target/4+1,target%4);
         System.out.println(playerName+"购买了一张发展卡！获得了"+card.getPoints()+"分，现在"+playerName+"总共有"+points+"分！");
         Thread.sleep(1000);
     }
@@ -38,7 +38,7 @@ public class Ai extends BasicPlayer {
     }
 
     public void repay() throws InterruptedException {
-        for(int i=random.nextInt();;i=random.nextInt(golds.size())){
+        for(int i=random.nextInt(golds.size());;i=random.nextInt(golds.size())){
             if(golds.get(i).canReturn(this)){
                 CrystalShop.getCrystalShop().payForGold(this,i,null);
                 System.out.println(playerName+"还款了一张发展卡！现在有"+ CrystalShop.getCrystalShop().getGold_num()+"块金矿！");
