@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="splendor" target="17" />
+      <module name="splendor" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
