@@ -116,8 +116,9 @@ public abstract class BasicPlayer implements BasicActions{
     }
 
     @Override
+    //函数内部处理
     public Gold repay(int pos){
-        Gold gold = golds.remove(pos);
+        Gold gold = golds.remove(pos-1);
         points+=gold.getCard().getPoints();
         discounts[gold.getCard().getReward().ordinal()]++;
         return gold;
@@ -125,7 +126,7 @@ public abstract class BasicPlayer implements BasicActions{
 
     private StringBuilder showCard(Card card){
         StringBuilder sb = new StringBuilder();
-        sb.append(card.getReward()).append("\t").append(card.getPoints()).append("\n");
+        sb.append(String.format("%-8s%d%n",card.getReward(),card.getPoints()));
         sb.append("requires:");
         for(Map.Entry<Crystal,Integer> e:card.getSolution().entrySet())
             sb.append(e.getKey()).append(":").append(e.getValue()).append(",");

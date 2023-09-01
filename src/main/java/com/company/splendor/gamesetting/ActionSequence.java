@@ -102,12 +102,14 @@ public class ActionSequence {
             case 1: System.out.println("您想买的发展卡是(难度序号,顺序序号)：");
                     while(difficulty==0||pos==0){
                         try{
-                            if(difficulty==0) difficulty = scanner.nextInt();
-                            if(pos==0) pos = scanner.nextInt();
-                            if (gamer.canBuyACard(difficulty,pos)){
-                                System.out.println("买不起！重新挑一张！");
-                                difficulty = 0;
-                                pos = 0;
+                            while(difficulty==0||pos==0){
+                                if(difficulty==0) difficulty = scanner.nextInt();
+                                if(pos==0) pos = scanner.nextInt();
+                                if (!gamer.canBuyACard(difficulty,pos)){
+                                    System.out.println("买不起！重新挑一张！");
+                                    difficulty = 0;
+                                    pos = 0;
+                                }
                             }
                         }catch (InputMismatchException e){
                             if(difficulty==0) System.out.println("第一个参数有问题，请重新输入！");
@@ -119,7 +121,7 @@ public class ActionSequence {
                     }
                     CrystalShop.getCrystalShop().payForCard(gamer.buyACard(difficulty,pos));
                     break;
-            case 2: System.out.println("您想贷款的发展卡是(难度序号,顺序序号)：");
+            case 2: System.out.println("您想贷款的发展卡是(难度序号,顺序序号):");
                     while (difficulty==0||pos==0){
                         try{
                             if(difficulty==0) difficulty = scanner.nextInt();
@@ -139,12 +141,12 @@ public class ActionSequence {
                     }
                     gamer.borrow(difficulty,pos);
                     break;
-            case 3: System.out.println("您想赎回的发展卡是(难度序号,顺序序号)：");
+            case 3: System.out.println("您想赎回的发展卡是(序号):");
                     while(pos==0){
                         try{
                             pos= scanner.nextInt();
-                            if((pos<1||pos>3)||(!gamer.getGolds().get(pos).canReturn(gamer))){
-                                System.out.println("错误的卡牌！重新挑一张！");
+                            if((pos<1||pos>gamer.getGolds().size())||(!gamer.getGolds().get(pos-1).canReturn(gamer))){
+                                System.out.println("不能赎回的卡牌！请重新输入！");
                                 pos = 0;
                             }
                         }catch (InputMismatchException e){
@@ -160,11 +162,13 @@ public class ActionSequence {
                     List<Crystal> list = new ArrayList<>(3);
                     while(list.size()<3){
                         try{
-                            crystal = Crystal.valueOf(upClassOfFirst(scanner.next()));
-                            if(!CrystalShop.getCrystalShop().canPick(crystal,1)){
-                                System.out.println("这种宝石不能再拿了！重新选一个：");
+                            while(list.size()<3){
+                                crystal = Crystal.valueOf(upClassOfFirst(scanner.next()));
+                                if((!CrystalShop.getCrystalShop().canPick(crystal,1))||list.contains(crystal)){
+                                    System.out.println(crystal+"不能拿了！重新选一个：");
+                                }
+                                else list.add(crystal);
                             }
-                            else list.add(crystal);
                         }catch (IllegalArgumentException e){
                             System.out.println("没有第"+list.size()+1+"种宝石！重新选"+(3-list.size())+"个：");
                         }catch (InputMismatchException e){
@@ -199,7 +203,7 @@ public class ActionSequence {
                     nums[crystal.ordinal()] = 2;
                     CrystalShop.getCrystalShop().pick(nums,gamer);
                     break;
-            default:System.out.println("输错了哈，给你空过了！");
+            default:System.out.println("输错了哈，你空过了！");
         }
 
         //宝石数量检查

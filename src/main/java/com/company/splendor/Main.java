@@ -62,10 +62,14 @@ public class Main {
                     break;
                 }
             }
-            //退出程序
-            System.out.println("任意键退出！");
-            System.in.read();
-            break;
+            //退出
+            try{
+                player_num = scanner.nextInt();
+                if(player_num==0) break;
+            }catch (Exception ignore){
+            }finally {
+                player_num=0;
+            }
         }
     }
 }

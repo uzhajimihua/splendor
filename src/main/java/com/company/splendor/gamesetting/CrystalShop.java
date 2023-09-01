@@ -8,6 +8,7 @@ import com.company.splendor.other.Crystal;
 import com.company.splendor.player.BasicPlayer;
 import lombok.Data;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -99,13 +100,23 @@ public class CrystalShop {
         Gold gold = player.repay(pos);
         Crystal owe = gold.Return(player);
         Card card = gold.getCard();
+        StringBuilder sb = new StringBuilder();
+        int i = -1;
         if(owe==null){
-            System.out.println("您想将黄金用于代替(不属于其中任何一个会随机选一个)：");
+            System.out.println("您想将黄金用于代替(不属于其中任何一个会随机选一个):");
             for(Crystal crystal:card.getSolution().keySet())
-                System.out.print(crystal.ordinal()+" "+crystal+" ");
-            int i = scanner.nextInt();
+                sb.append(crystal.ordinal() + 1).append(":").append(crystal).append(",");
+            System.out.println(sb.deleteCharAt(sb.length()-1));
+            while (i==-1){
+                try {
+                    i = scanner.nextInt();
+                }catch (InputMismatchException ignore){
+                }finally {
+                    if(scanner.hasNextLine()) scanner.nextLine();
+                }
+            }
             if(i>=0&&i<5){
-                if(card.getSolution().containsKey(Crystal.values()[i])) owe = Crystal.values()[i];
+                if(card.getSolution().containsKey(Crystal.values()[--i])) owe = Crystal.values()[i];
                 else owe = card.getSolution().keySet().iterator().next();
             }
             else owe = card.getSolution().keySet().iterator().next();
@@ -127,7 +138,7 @@ public class CrystalShop {
         for(Crystal crystal:Crystal.values()){
             sb.append(crystalFactory.getCrystal(crystal).showStatus());
         }
-        sb.deleteCharAt(sb.length()-2).append(String.format("%nGold  remains%2d%n",gold_num));
+        sb.deleteCharAt(sb.length()-2).append(String.format("%nGold  剩余%2d%n",gold_num));
         System.out.println(sb);
     }
 }
